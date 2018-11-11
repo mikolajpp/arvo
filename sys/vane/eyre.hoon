@@ -551,7 +551,7 @@
       ;head:title:"Redirecting..."
       ;body
         ;p: Redirecting to ;{a/"{url}" "{url}"}
-        ;script: setTimeout(function()\{document.location = {(en-json (tape:enjs url))}}, 3000)
+        ;script:'setTimeout(function()\{document.location = {(en-json (tape:enjs url))}}, 3000)'
       ==
     ==
   ::
