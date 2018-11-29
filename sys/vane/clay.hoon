@@ -1,4 +1,3 @@
-!:
 ::  clay (4c), revision control
 ::
 ::  This is split in three top-level sections:  structure definitions, main
@@ -3767,6 +3766,9 @@
       (~(has in who.r) |+nom.req)
     --
   ::
+      $crud
+    [[[hen %slip %d %flog req] ~] ..^$]
+  ::
       $drop
     =^  mos  ruf
       =+  den=((de now hen ruf) [. .]:our.req des.req)
@@ -3963,12 +3965,6 @@
         ==
     ==
   ==
-::
-::  All timers are handled by `%behn` nowadays.
-++  doze
-  |=  {now/@da hen/duct}
-  ^-  (unit @da)
-  ~
 ::
 ++  load
   =>  |%
