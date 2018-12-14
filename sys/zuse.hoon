@@ -80,7 +80,6 @@
 ++  life  @ud                                           ::  ship version
 ++  mime  {p/mite q/octs}                               ::  mimetyped data
 ++  octs  {p/@ud q/@t}                                  ::  octet-stream
-++  sack  {p/ship q/ship}                               ::  incoming [our his]
 ++  sock  {p/ship q/ship}                               ::  outgoing [our his]
 ::+|
 ::
@@ -480,20 +479,19 @@
       $%  {$flog p/flog:dill}                           ::
       ==  ==                                            ::
           $:  %j                                        ::  to %jael
-      $%  [%meet our=ship who=ship =life =pass]         ::  neighbor
-          [%pubs our=ship who=ship]                     ::  view public keys
+      $%  [%meet =ship =life =pass]                     ::  neighbor
+          [%pubs =ship]                                 ::  view public keys
           [%turf ~]                                     ::  view domains
-          [%vein our=ship]                              ::  view private keys
+          [%vein ~]                                     ::  view private keys
       ==  ==                                            ::
           $:  $g                                        ::  to %gall
       $%  {$deal p/sock q/cush:gall}                    ::
       ==  ==                                            ::
           $:  @tas                                      ::  to any
-      $%  {$west p/sack q/path r/*}                     ::
+      $%  {$west p/ship q/path r/*}                     ::
       ==  ==  ==                                        ::
     ++  gift                                            ::  out result <-$
-      $%  {$hear p/lane q/@}                            ::  receive packet
-          {$mack p/(unit tang)}                         ::  
+      $%  {$mack p/(unit tang)}                         ::  acknowledgement
           {$mass p/mass}                                ::  memory usage
           {$send p/lane q/@}                            ::  transmit packet
           {$turf p/(list turf)}                         ::  bind to domains
@@ -531,8 +529,8 @@
           {$sunk p=ship q=life}                         ::  report death
           {$wake ~}                                     ::  timer activate
           {$wegh ~}                                     ::  report memory
-          {$west p/sack q/path r/*}                     ::  network request
-          {$want p/sock q/path r/*}                     ::  forward message
+          {$west p/ship q/path r/*}                     ::  network request
+          {$want p/ship q/path r/*}                     ::  forward message
       ==                                                ::
     --  ::able
   ::
@@ -568,17 +566,17 @@
         ryl/(map path rill)                             ::  statements outbound
     ==                                                  ::
   ++  boon                                              ::  fort output
-    $%  {$beer p/sock}                                  ::  request public keys
-        {$bock ~}                                       ::  bind to domains
-        {$brew ~}                                       ::  request domains
-        {$cake p/sock q/soap r/coop s/duct}             ::  e2e message result
-        {$mead p/lane q/rock}                           ::  accept packet
-        {$milk p/sock q/soap r/*}                       ::  e2e pass message
-        {$ouzo p/lane q/rock}                           ::  transmit packet
-        {$pito p/@da}                                   ::  timeout
-        {$raki p/sock q/life r/pass}                    ::  neighbor'd
-        {$sake p/ship}                                  ::  our private keys
-        {$wine p/sock q/tape}                           ::  notify user
+    $%  [%beer p=ship]                                  ::  request public keys
+        [%bock ~]                                       ::  bind to domains
+        [%brew ~]                                       ::  request domains
+        [%cake p=ship q=soap r=coop s=duct]             ::  e2e message result
+        [%mead p=lane q=rock]                           ::  accept packet
+        [%milk p=ship q=soap r=*]                       ::  e2e pass message
+        [%ouzo p=lane q=rock]                           ::  transmit packet
+        [%pito p=@da]                                   ::  timeout
+        [%raki p=ship q=life r=pass]                    ::  neighbor'd
+        [%sake ~]                                       ::  our private keys
+        [%wine p=ship q=tape]                           ::  notify user
     ==                                                  ::
   ++  cake  {p/sock q/skin r/@}                         ::  top level packet
   ++  cape                                              ::  end-to-end result
@@ -615,7 +613,7 @@
         hop/@da                                         ::  network boot date
         bad/(set @p)                                    ::  bad ships
         ton/town                                        ::  security
-        zac/(map ship corn)                             ::  flows by server
+        zac/corn                                        ::  flows by server
     ==                                                  ::
   ++  hand  @uvH                                        ::  128-bit hash
   ++  lane                                              ::  packet route
@@ -678,15 +676,12 @@
         lys/@da                                         ::  last sent
         pac/rock                                        ::  packet data
     ==                                                  ::
-  ++  sufi                                              ::  domestic host
-    $:  val/wund                                        ::  private keys
+  ++  town                                              ::  all security state
+    $:  any/@                                           ::  entropy
+        val/wund                                        ::  private keys
         law/deed                                        ::  server deed
         seh/(map hand {p/ship q/@da})                   ::  key cache
         hoc/(map ship dore)                             ::  neighborhood
-    ==                                                  ::
-  ++  town                                              ::  all security state
-    $:  any/@                                           ::  entropy
-        urb/(map ship sufi)                             ::  all keys and routes
     ==                                                  ::
   ++  wund  (list {p/life q/ring r/acru})               ::  secrets in action
   --  ::ames
@@ -700,6 +695,10 @@
     ::                                                  ::::
   ++  able  ^?
     |%
+    ++  note                                            ::  out request $->
+      $%  $:  $d                                        ::  to %dill
+      $%  {$flog p/flog:dill}                           ::
+      ==  ==  ==                                        ::
     ++  gift                                            ::  out result <-$
       $%  {$doze p/(unit @da)}                          ::  next alarm
           {$mass p/mass}                                ::  memory usage
@@ -707,6 +706,7 @@
       ==                                                ::
     ++  task                                            ::  in request ->$
       $%  {$born ~}                                     ::  new unix process
+          {$crud p/@tas q/(list tank)}                  ::  error with trace
           {$rest p/@da}                                 ::  cancel alarm
           {$wait p/@da}                                 ::  set alarm
           {$wake ~}                                    ::  timer activate
@@ -741,30 +741,30 @@
           {$wris p/{$da p/@da} q/(set (pair care path))}  ::  many changes
       ==                                                ::
     ++  task                                            ::  in request ->$
-      $%  {$boat ~}                                    ::  pier rebooted
-          {$cred our/ship nom/@ta cew/crew}             ::  set permission group
-          {$crew our/ship}                              ::  permission groups
-          {$crow our/ship nom/@ta}                      ::  group usage
+      $%  {$boat ~}                                     ::  pier rebooted
+          {$cred nom/@ta cew/crew}                      ::  set permission group
+          {$crew ~}                                     ::  permission groups
+          {$crow nom/@ta}                               ::  group usage
           {$crud p/@tas q/(list tank)}                  ::  error with trace
-          {$drop our/@p des/desk}                       ::  cancel pending merge
-          {$info our/@p des/desk dit/nori}              ::  internal edit
+          {$drop des/desk}                              ::  cancel pending merge
+          {$info des/desk dit/nori}                     ::  internal edit
           {$init our/@p}                                ::  report install
           {$into des/desk all/? fis/mode}               ::  external edit
           $:  $merg                                     ::  merge desks
-              our/@p  des/desk                          ::  target
+              des/desk                                  ::  target
               her/@p  dem/desk  cas/case                ::  source
               how/germ                                  ::  method
           ==                                            ::
           {$mont des/desk bem/beam}                     ::  mount to unix
           {$dirk des/desk}                              ::  mark mount dirty
           {$ogre pot/$@(desk beam)}                     ::  delete mount point
-          {$perm our/ship des/desk pax/path rit/rite}   ::  change permissions
+          {$perm des/desk pax/path rit/rite}            ::  change permissions
           {$sunk p=ship q=life}                         ::  report death
-          {$warp wer/sock rif/riff}                     ::  internal file req
-          {$werp who/ship wer/sock rif/riff}            ::  external file req
+          {$warp wer/ship rif/riff}                     ::  internal file req
+          {$werp who/ship wer/ship rif/riff}            ::  external file req
           {$wegh ~}                                    ::  report memory
-          {$went wer/sack pax/path num/@ud ack/coop}    ::  response confirm
-          {$west wer/sack pax/path res/*}               ::  network request
+          {$went wer/ship pax/path num/@ud ack/coop}    ::  response confirm
+          {$west wer/ship pax/path res/*}               ::  network request
       ==                                                ::
     --  ::able
   ::
@@ -908,8 +908,7 @@
           {$mass p/mass}                                ::  memory usage
           {$send p/lane:ames q/@}                       ::  transmit packet
           {$veer p/@ta q/path r/@t}                     ::  install vane
-          {$vega p/path q/path}                         ::  old reboot
-          {$velo p/@t q/@t}                             ::  reboot
+          {$vega p/@t q/@t}                             ::  reboot
           {$verb ~}                                    ::  verbose mode
       ==                                                ::
     ++  task                                            ::  in request ->$
@@ -929,8 +928,7 @@
           {$talk p/tank}                                ::
           {$text p/tape}                                ::
           {$veer p/@ta q/path r/@t}                     ::  install vane
-          {$vega p/path q/path}                         ::  old reboot
-          {$velo p/@t q/@t}                             ::  reboot
+          {$vega p/@t q/@t}                             ::  reboot
           {$verb ~}                                    ::  verbose mode
       ==                                                ::
     --  ::able
@@ -990,8 +988,7 @@
         {$heft ~}                                      ::
         {$text p/tape}                                  ::
         {$veer p/@ta q/path r/@t}                       ::  install vane
-        {$vega p/path q/path}                           ::  old reboot
-        {$velo p/@t q/@t}                               ::  reboot
+        {$vega p/@t q/@t}                               ::  reboot
         {$verb ~}                                      ::  verbose mode
     ==                                                  ::
   --  ::dill
@@ -1014,8 +1011,7 @@
           [%thou p=httr]                                ::  raw http response
           [%thus p=@ud q=(unit hiss)]                   ::  http request+cancel
           [%veer p=@ta q=path r=@t]                     ::  drop-through
-          [%vega p=path q=path]                         ::  drop-through
-          [%velo p=@t q=@t]                             ::  drop-through
+          [%vega p=@t q=@t]                             ::  drop-through
       ==                                                ::
     +=  task                                            ::  in request ->$
       $%  [%born p=(list host)]                         ::  new unix process
@@ -1033,8 +1029,8 @@
           [%thud ~]                                     ::  inbound cancel
           [%wegh ~]                                     ::  report memory
           [%well p=path q=(unit mime)]                  ::  put/del .well-known
-          [%went p=sack q=path r=@ud s=coop]            ::  response confirm
-          [%west p=sack q=[path *]]                     ::  network request
+          [%went p=ship q=path r=@ud s=coop]            ::  response confirm
+          [%west p=ship q=[path *]]                     ::  network request
           [%wise p=ship q=prox]                         ::  proxy notification
       ==                                                ::
     --  ::able
@@ -1249,9 +1245,6 @@
       $%  ::  %build: perform a build, either live or once
           ::
           $:  %build
-              ::  our: who our ship is (remove after cc-release)
-              ::
-              our=@p
               ::  live: whether we run this build live
               ::
               ::    A live build will subscribe to further updates and keep the
@@ -1267,11 +1260,7 @@
           [%keep compiler-cache=@ud build-cache=@ud]
           ::  %kill: stop a build; send on same duct as original %build request
           ::
-          $:  %kill
-              ::  our: who our ship is (remove after cc-release)s
-              ::
-              our=@p
-          ==
+          [%kill ~]
           ::  %sunk: receive a report that a foreign ship has lost continuity
           ::
           [%sunk =ship =life]
@@ -1966,8 +1955,8 @@
           {$init p/ship}                                ::  set owner
           {$deal p/sock q/cush}                         ::  full transmission
           {$sunk p=ship q/life}                         ::  report death
-          {$went p/sack q/path r/@ud s/coop}            ::  response confirm
-          {$west p/sack q/path r/*}                     ::  network request
+          {$went p/ship q/path r/@ud s/coop}            ::  response confirm
+          {$west p/ship q/path r/*}                     ::  network request
           {$wegh ~}                                    ::  report memory
       ==                                                ::
     --  ::able
@@ -2105,19 +2094,18 @@
       $%  [%hiss p=(unit user) q=mark r=cage]           ::  outbound user req
       ==  ==                                            ::
           $:  %a                                        ::
-      $%  [%want p=sock q=path r=*]                     ::  send message
+      $%  [%want p=ship q=path r=*]                     ::  send message
       ==  ==                                            ::
           $:  %j                                        ::
       $%  [%vent-result p=vent-result]                  ::  tmp workaround
-          [%look our=ship src=(each ship purl:eyre)]    ::
+          [%look src=(each ship purl:eyre)]             ::
       ==  ==                                            ::
           $:  @tas                                      ::
       $%  [%init p=ship]                                ::  report install
           [%sunk p=ship q=life]                         ::  report death
       ==  ==  ==                                        ::
     ++  public                                          ::  public key state
-      $:  live=?                                        ::  seen in current era
-          life=life                                     ::  current key number
+      $:  life=life                                     ::  current key number
           pubs=(map life pass)                          ::  pubkeys by number
       ==                                                ::
     ++  remote                                          ::  remote notification
@@ -2138,8 +2126,8 @@
       action                                            ::  change
     ::
     +=  task                                            ::  in request ->$
-      $%  [%burn our=ship p=ship q=safe]                ::  destroy rights
-          [%hail our=ship p=ship q=remote]              ::  remote update
+      $%  [%burn p=ship q=safe]                         ::  destroy rights
+          [%hail p=ship q=remote]                       ::  remote update
           $:  %dawn                                     ::  boot from keys
               =seed:able:jael                           ::    identity params
               spon=(unit ship)                          ::    sponsor
@@ -2149,21 +2137,21 @@
               node=(unit purl:eyre)                     ::    gateway url
               snap=(unit snapshot)                      ::    head start
           ==                                            ::
-          [%fake our=ship]                              ::  fake boot
-          [%look our=ship src=(each ship purl:eyre)]    ::  set ethereum source
-          [%mint our=ship p=ship q=safe]                ::  create rights
-          [%move our=ship p=ship q=ship r=safe]         ::  transfer from=to
+          [%fake =ship]                                 ::  fake boot
+          [%look src=(each ship purl:eyre)]             ::  set ethereum source
+          [%mint p=ship q=safe]                         ::  create rights
+          [%move p=ship q=ship r=safe]                  ::  transfer from=to
           ::TODO  %next for generating/putting new private key
           [%nuke ~]                                     ::  cancel tracker from
-          [%pubs our=ship who=ship]                     ::  view public keys
-          [%meet our=ship who=ship =life =pass]         ::  met after breach
+          [%pubs =ship]                                 ::  view public keys
+          [%meet =ship =life =pass]                     ::  met after breach
           [%turf ~]                                     ::  view domains
-          [%vein our=ship]                              ::  view signing keys
-          [%vent our=ship]                              ::  view ethereum events
-          [%vest our=ship]                              ::  view public balance
+          [%vein ~]                                     ::  view signing keys
+          [%vent ~]                                     ::  view ethereum events
+          [%vest ~]                                     ::  view public balance
           [%vine ~]                                     ::  view secret history
-          [%west p=sack q=path r=*]                     ::  remote request
-          [%wind our=ship p=@ud]                        ::  rewind before block
+          [%west p=ship q=path r=*]                     ::  remote request
+          [%wind p=@ud]                                 ::  rewind before block
       ==                                                ::
     --                                                  ::
   ::                                                    ::
@@ -2176,19 +2164,25 @@
     ==                                                  ::
   ++  snapshot                                          ::  rewind point
     =,  constitution:ethe                               ::
-    $:  eve=logs:able                                   ::  eth absolute state
-        kyz=(map ship public:able)                      ::  public key state
+    $:  kyz=(map ship public:able)                      ::  public key state
         $=  eth                                         ::
           $:  dns=dnses                                 ::  on-chain dns state
               hul=(map ship hull)                       ::  on-chain ship state
         ==                                              ::
-        etn=state-eth-node                              ::  eth connection state
-    ==                                                  ::
+        eth-bookmark
+    ==
+  ::  +eth-bookmark: cursor into the ethereum chain
+  ::
+  ++  eth-bookmark
+    $:  heard=(set event-id:ethe)
+        latest-block=@ud
+    ==
+  ::  +state-eth-node: state of a connection to an ethereum node
+  ::
   ++  state-eth-node                                    ::  node config + meta
     $:  source=(each ship node-src)                     ::  learning from
-        heard=(set event-id:ethe)                       ::  processed events
-        latest-block=@ud                                ::  last heard block
         foreign-block=@ud                               ::  node's latest block
+        eth-bookmark
     ==                                                  ::
   ::                                                    ::
   ::::                  ++pki:jael                      ::  (1h2) certificates
@@ -6775,7 +6769,7 @@
 ::                                                      ::
 ::::                      ++milly                       ::  (2k) milliseconds
   ::                                                    ::::
-++  milly  ^?
+++  milly  ^|
   |_  now/@da
   ::                                                    ::  ++around:milly
   ++  around                                            ::  relative msec
@@ -8230,34 +8224,55 @@
   ::  |take:dawn: parse responses for pre-boot validation
   ::
   ++  take
-    =,  dejs:format
+    =,  dejs-soft:format
     |%
     ::  +bloq:take:dawn: parse block number
     ::
     ++  bloq
       |=  rep=octs
-      ^-  @ud
-      =/  jon=json  (need (de-json:html q.rep))
-      =/  res=cord  ((ot result+so ~) jon)
-      (hex-to-num:ethereum res)
+      ^-  (unit @ud)
+      =/  jon=(unit json)  (de-json:html q.rep)
+      ?~  jon
+        ~&([%bloq-take-dawn %invalid-json] ~)
+      =/  res=(unit cord)  ((ot result+so ~) u.jon)
+      ?~  res
+        ~&([%bloq-take-dawn %invalid-response rep] ~)
+      =/  out
+        %-  mule  |.
+        (hex-to-num:ethereum u.res)
+      ?:  ?=(%& -.out)
+        (some p.out)
+      ~&([%bloq-take-dawn %invalid-block-number] ~)
     ::  +czar:take:dawn: parse galaxy table
     ::
     ++  czar
       |=  rep=octs
-      ^-  (map ship [=life =pass])
-      =/  jon=json  (need (de-json:html q.rep))
-      =/  res=(list [@t @t])
-        ((ar (ot id+so result+so ~)) jon)
-      %+  roll  res
-      |=  $:  res=[id=@t result=@t]
+      ^-  (unit (map ship [=life =pass]))
+      =/  jon=(unit json)  (de-json:html q.rep)
+      ?~  jon
+        ~&([%czar-take-dawn %invalid-json] ~)
+      =/  res=(unit (list [@t @t]))
+        ((ar (ot id+so result+so ~)) u.jon)
+      ?~  res
+        ~&([%czar-take-dawn %invalid-response rep] ~)
+      =/  dat=(unit (list [who=ship enc=octs aut=octs sut=@ud rev=@ud]))
+        =-  ?:(?=(%| -.out) ~ (some p.out))
+        ^=  out  %-  mule  |.
+        %+  turn  u.res
+        |=  [id=@t result=@t]
+        ^-  [who=ship enc=octs aut=octs sut=@ud rev=@ud]
+        :-  `@p`(slav %ud (rsh 3 4 id))
+        %+  decode-results:ethereum
+          result
+        ~[[%bytes-n 32] [%bytes-n 32] %uint %uint]
+      ?~  dat
+        ~&([%bloq-take-dawn %invalid-galaxy-table] ~)
+      :-  ~
+      %+  roll  u.dat
+      |=  $:  [who=ship enc=octs aut=octs sut=@ud rev=@ud]
               kyz=(map ship [=life =pass])
           ==
       ^+  kyz
-      =/  who=ship  (slav %ud (rsh 3 4 id.res))
-      =+  ^-  [enc=octs aut=octs sut=@ud rev=@ud]
-        %+  decode-results:ethereum
-          result.res
-        ~[[%bytes-n 32] [%bytes-n 32] %uint %uint]
       =/  pub=(unit pass)
         (pass-from-eth:constitution:ethereum enc aut sut)
       ?~  pub  kyz
@@ -8266,24 +8281,40 @@
     ::
     ++  hull
       |=  [who=ship rep=octs]
-      ^-  hull:constitution:ethe
-      =/  jon=json  (need (de-json:html q.rep))
-      =/  res=cord  ((ot result+so ~) jon)
-      ~?  =(res '0x')  'bad result from node; is ships address correct?'
-      %+  hull-from-eth:constitution:ethereum
-        who
-      :_  *deed:eth-noun:constitution:ethereum
-      (decode-results:ethereum res hull:eth-type:constitution:ethe)
+      ^-  (unit hull:constitution:ethe)
+      =/  jon=(unit json)  (de-json:html q.rep)
+      ?~  jon
+        ~&([%hull-take-dawn %invalid-json] ~)
+      =/  res=(unit cord)  ((ot result+so ~) u.jon)
+      ?~  res
+        ~&([%hull-take-dawn %invalid-response rep] ~)
+      ~?  =(u.res '0x')
+        'bad result from node; is ships address correct?'
+      =/  out
+        %-  mule  |.
+        %+  hull-from-eth:constitution:ethereum
+          who
+        :_  *deed:eth-noun:constitution:ethereum
+        (decode-results:ethereum u.res hull:eth-type:constitution:ethe)
+      ?:  ?=(%& -.out)
+        (some p.out)
+      ~&([%hull-take-dawn %invalid-hull] ~)
     ::  +turf:take:dawn: parse network domains
     ::
     ++  turf
       |=  rep=octs
-      ^-  (list ^turf)
-      =/  jon=json  (need (de-json:html q.rep))
-      =/  res=(list [@t @t])
-        ((ar (ot id+so result+so ~)) jon)
-      =/  dom=(list (pair @ud ^turf))
-        %+  turn  res
+      ^-  (unit (list ^turf))
+      =/  jon=(unit json)  (de-json:html q.rep)
+      ?~  jon
+        ~&([%turf-take-dawn %invalid-json] ~)
+      =/  res=(unit (list [@t @t]))
+        ((ar (ot id+so result+so ~)) u.jon)
+      ?~  res
+        ~&([%turf-take-dawn %invalid-response rep] ~)
+      =/  dat=(unit (list (pair @ud ^turf)))
+        =-  ?:(?=(%| -.out) ~ (some p.out))
+        ^=  out  %-  mule  |.
+        %+  turn  u.res
         |=  [id=@t result=@t]
         ^-  (pair @ud ^turf)
         :-  (slav %ud (rsh 3 5 id))
@@ -8292,6 +8323,10 @@
         =/  hot=host:eyre
           (scan dom thos:de-purl:html)
         ?>(?=(%& -.hot) p.hot)
+      ?~  dat
+        ~&([%turf-take-dawn %invalid-domains] ~)
+      :-  ~
+      =*  dom  u.dat
       :: sort by id, ascending, removing duplicates
       ::
       =|  tuf=(map ^turf @ud)
@@ -8314,14 +8349,18 @@
     ::
     ++  bloq
       |=  snap=snapshot:jael
-      ^-  @ud
-      latest-block.etn.snap
+      ^-  (unit @ud)
+      =-  ?:(?=(%| -.out) ~ (some p.out))
+      ^=  out  %-  mule  |.
+      latest-block.snap
     ::  +czar:snap:dawn: extract galaxy table
     ::
     ++  czar
       |=  snap=snapshot:jael
-      ^-  (map ship [=life =pass])
-      %-  malt
+      ^-  (unit (map ship [=life =pass]))
+      =-  ?:(?=(%| -.out) ~ (some p.out))
+      ^=  out  %-  mule  |.
+      %-  ~(gas by *(map ship [=life =pass]))
       %+  turn  (gulf 0 255)
       |=  gal=@
       ^-  [ship [life pass]]
@@ -8332,26 +8371,24 @@
     ::
     ++  hull
       |=  [who=ship snap=snapshot:jael]
-      ^-  hull:constitution:ethe
-      =/  res  (~(get by hul.eth.snap) who)
-      ?~  res
-        ~&  ['hull not found in snapshot; can\'t verify' who=who]
-        !!
-      u.res
+      ^-  (unit hull:constitution:ethe)
+      (~(get by hul.eth.snap) who)
     ::  +turf:snap:dawn: extract network domains
     ::
     ++  turf
       |=  snap=snapshot:jael
-      ^-  (list ^turf)
+      ^-  (unit (list ^turf))
+      =-  ?:(?=(%| -.out) ~ (some p.out))
+      ^=  out  %-  mule  |.
       %+  murn
-        ^-  (list (pair))
+        ^-  (list host:eyre)
         %+  murn
           ^-  (list @t)
           ~[pri sec ter]:dns.eth.snap
         |=  dom=@t
-        ^-  (unit (pair))
+        ^-  (unit host:eyre)
         (rush dom thos:de-purl:html)
-      |=([* a=*] ((soft ^turf) a))
+      |=(a=host:eyre ?:(?=(%| -.a) ~ (some p.a)))
     --
   ::  +veri:dawn: validate keys, life, discontinuity, &c
   ::
